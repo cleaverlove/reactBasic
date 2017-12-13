@@ -140,10 +140,9 @@ function FancyBoxWithState(
 }
 
 function UserList(users) {
-	/* ★这一步，不好理解
-		并没有return,但是却可以使用child.continuation和child.key
-		可能是因为箭头函数里面的this绑定的是父级,里面的值被当作this的属性
-		参考下http://bbs.reactnative.cn/topic/15/react-react-native-%E7%9A%84es5-es6%E5%86%99%E6%B3%95%E5%AF%B9%E7%85%A7%E8%A1%A8/2
+	/*  
+		使用'箭头函数'返回对象
+		http://bbs.reactnative.cn/topic/15/react-react-native-%E7%9A%84es5-es6%E5%86%99%E6%B3%95%E5%AF%B9%E7%85%A7%E8%A1%A8/2
 		中的‘把方法作为回调提供’
 	 */
 	return users.map(user => {
