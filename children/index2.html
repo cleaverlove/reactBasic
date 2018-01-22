@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>操纵子元素</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="../build/antd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/antd.css">
+  </head>
+  <body>
+    <div id="example"></div>
+    <div id="example1"></div>
+    <div id="example2"></div>
+    <div id="example3"></div>
+    <div id="example4"></div>
+    <div id="example5"></div>
+    <script type="text/babel">
+      
+      let oStyle = {
+    		fontSize: '22px',
+    		color: 'red'
+    	}
+    	class IngoreFirstChild extends React.Component {
+    		constructor(props) {
+    			super(props)
+    		}
+    		render() {
+    			const children = this.props.children;
+    			return (
+    				<div>
+    					{
+    						React.Children.map(children, (child, i) => {
+    							if ( i!= 0 && i < 2 ) return;
+    							return child;
+
+    						})
+    					}
+    				</div>
+    			)
+    		}
+    	}
+
+    	ReactDOM.render(
+    		<IngoreFirstChild>
+    			<h1>part One: React.Children.map和React.Children.forEach是最常用的辅助方法</h1>
+    			<h1>First</h1>
+    			<h1>Second</h1>
+    		</IngoreFirstChild>
+    		, document.getElementById('example')
+    	)
+
+    	class ChildrenCount extends React.Component {
+    		constructor(props){
+    			super(props)
+    		}
+    		render() {
+    			return (
+    				<div>
+    					<p><b style={{fontSize:'22px'}}>part Tow: 统计子元素个数</b>子元素的个数:{React.Children.count(this.props.children)}</p>
+    				</div>
+    			)
+    		}
+    	}
+
+    	ReactDOM.render(
+    		<ChildrenCount>
+    			hello world!
+    		</ChildrenCount>
+    		, document.getElementById('example1')
+    	) 
+    	ReactDOM.render(
+    		<ChildrenCount>
+    			hello world!
+    			<IngoreFirstChild>
+    				<h2>hello world again!</h2>
+    			</IngoreFirstChild>
+    		</ChildrenCount>
+    		, document.getElementById('example2')
+    	) 
+
+    	ReactDOM.render(
+    		<ChildrenCount>
+    			{ () => <h2>Good day</h2> }
+    			sunShine!
+    			<p>happy</p>
+    		</ChildrenCount>
+    		,document.getElementById('example3')
+    	)
+
+    	class Sort extends React.Component {
+    		constructor(props) {
+    			super(props)
+    		}
+    		render() {
+    			const children = React.Children.toArray(this.props.children)
+    			return <p style={oStyle}>{children.sort().join('|')}</p>
+    		}
+    	}
+
+    	ReactDOM.render(
+    		<div>
+    			<h1>part Three: 转化子元素为一个数组</h1>
+    			<Sort>
+	    			{'bananas'}
+	    			{'oranges'}
+	    			{'apple'}
+	    		</Sort>
+    		</div>
+    		,document.getElementById('example4')
+    	)
+
+    	class Executioner extends React.Component {
+    		constructor(props) {
+    			super(props)
+    		}
+    		render () {
+    			return 	React.Children.only(this.props.children)
+  
+    		}
+    	}
+
+    	ReactDOM.render(
+    		<div>
+    			<h1>part Four:强制只有一个子元素，如果不只有一个后代，抛出错误
+    			</h1>
+    			<Executioner>
+    				<p style={oStyle}>子元素不能是函数</p>
+    			</Executioner>
+    		</div>
+    		, document.getElementById('example5')
+    	)
+
+    </script>
+    <script type="text/javascript">
+       /*
+			part One中 若我们使用this.props.children.map也是可以的，但是如果一个人传递一个函数作为它的子元素，this.props.children将是一个数组而不是一个函数，会报错this.props.children.map不是一个函数，而使用React.Children.map不会遇到任何问题
+
+			part Four中 子元素是函数的话，子元素个数不是为1，有问题。（待验证下）
+       */
+    </script>
+  </body>
+</html>

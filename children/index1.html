@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>一切都可以被当做子元素</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="../build/antd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/antd.css">
+</head>
+<body>
+	<div id="example"></div>
+	<div id="example2"></div>
+	<script type="text/babel">
+		class Grid extends React.Component {
+			constructor(props){
+				super(props)
+			}
+			render() {
+				return (
+					<div>
+						{this.props.children}
+					</div>
+				)
+			}
+		}
+
+		let StateLess = (props) => {
+			return (
+				<div>
+					<p style={props.style}>{props.content}</p>
+				</div>
+			)
+		}
+
+		ReactDOM.render(
+			<Grid>
+				<h1>part One:可以混合多中类型的后代工作</h1>
+				<StateLess style={{fontSize: '16px',color: 'blue'}} content={'字体大小16px,字体颜色蓝色'} />
+				今天天气很好
+				<StateLess style={{fontSize:'25px',color:'red'}} content={'字体大小25px,字体颜色红色'} />
+				<h2>h2标签</h2>
+				<hr />
+			</Grid>
+			, document.getElementById('example')
+		)
+
+		class Executioner extends React.Component {
+			constructor(props) {
+				super(props)
+			}
+			render() {
+				return this.props.children();
+			}
+		}
+
+		ReactDOM.render(
+			<div>
+				<h1>part Two: 把函数作为子元素</h1>
+				<Executioner>
+					{ () => <h3>hello world!</h3> }
+				</Executioner>
+			</div>
+			,document.getElementById('example2')
+		)
+	</script>
+	<script type="text/javascript">
+		/*
+			part One:
+			注意: JSX将自动移除在一行收尾的空白以及空行。它还将字符串中文字的空白行压缩成一个空格。
+			StateLess是一个无状态组件，可以根据传入的值，渲染不同的效果
+
+		*/
+	</script>
+</body>
+</html>

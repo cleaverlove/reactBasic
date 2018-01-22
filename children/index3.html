@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>修改子元素</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="../build/antd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/antd.css">
+  </head>
+  <body>
+    <div id="example"></div>
+    <div id="example1"></div>
+    <script type="text/babel">
+      class RadioGroup extends React.Component {
+        constructor(props) {
+          super(props);
+          this.renderChildren = this.renderChildren.bind(this);
+        }
+        renderChildren() {
+          return React.Children.map(this.props.children, child => {
+            return React.cloneElement(child, {
+              name: this.props.name
+            });
+          })
+        }
+        render() {
+          return (
+            <div>
+              { this.renderChildren() }
+            </div>
+          )
+        }
+      }
+
+      class RadioButton extends React.Component {
+        constructor(props) {
+          super(props)
+        }
+        render() {
+          return (
+            <div>
+              <input type="radio" value={this.props.value} name={this.props.name} /> 
+              {this.props.children}
+            </div>
+          ) 
+        }
+      }
+      ReactDOM.render(
+        <div>
+          <h1>修改子元素</h1>
+          <RadioGroup name="sex">
+            <RadioButton value="man" >MAN</RadioButton>
+            <RadioButton value="weman" >WEMAN</RadioButton>
+          </RadioGroup>
+        </div>
+        
+        ,document.getElementById('example')
+      )
+      
+    </script>
+    <script type="text/javascript">
+       /*
+          React.cloneElement复制一个元素，参数1是我们想复制的元素，参数2是我们想设置的值。
+          renderChildren方法处理后，类似于<RadioButton value="man" name="sex" >MAN</RadioButton>
+          此时我们需要在RadioButton组件中通过this.props.name拿到我们想要的值
+       */
+    </script>
+  </body>
+</html>

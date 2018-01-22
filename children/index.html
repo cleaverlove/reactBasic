@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>children在React中的作用</title>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="../build/antd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/antd.css">
+  </head>
+  <body>
+    <div id="example"></div>
+    <div id="example1"></div>
+    <div id="example2"></div>
+    <div id="example3"></div>
+    <script type="text/babel">
+      let Grid = React.createClass({
+        render: function() {
+          return (
+            <div>
+              {this.props.children}
+            </div> 
+          )
+        }
+      })
+      
+      ReactDOM.render(
+        <Grid>
+            <antd.Button type="primary">Primary</antd.Button>
+        </Grid>
+        ,document.getElementById('example')
+      )
+
+      class Grid1 extends React.Component{
+        constructor(props) {
+          super(props)
+        }
+        render() {
+          return (
+            <div>
+              {this.props.children}
+            </div>
+          )
+        }
+      }
+      ReactDOM.render(
+        <Grid1>
+            <antd.Button>Primary</antd.Button>
+        </Grid1>
+        ,document.getElementById('example1')
+      ) 
+
+      let HOC = (components) => {
+        class NewComponents extends React.Component {
+          constructor(props) {
+            super(props)
+          }
+          render () {
+            return (
+              <div>
+                <antd.Progress percent={100} />
+                <components>
+                  <h1>really</h1>
+                </components>
+              </div>
+            )
+          }
+        }
+        return NewComponents;
+      }
+      let NGrid = HOC(Grid);
+      let NGrid1 = HOC(Grid1);
+      ReactDOM.render(
+        <div>
+          <NGrid />
+          <NGrid1 />
+        </div>
+        ,document.getElementById('example2')
+      )
+
+      let HOC1 = (components) => {
+        class newComponents extends React.Component {
+          constructor(props) {
+            super(props)
+          }
+          render() {
+            return (
+              <div>
+                <antd.Progress percent={100} />
+                <components children = {this.props.children} />
+              </div>
+            )
+          }
+        }
+        return newComponents;
+      }
+      let NGrid2 = HOC1(Grid);
+      let NGrid3 = HOC1(Grid1);
+      ReactDOM.render(
+        <div>
+          <NGrid2>
+            <antd.Button type="primary">Primary</antd.Button>
+          </NGrid2>
+          <NGrid3>
+            <antd.Button>Primary</antd.Button>
+          </NGrid3>
+        </div>
+        ,document.getElementById('example3')
+      )
+    </script>
+    <script type="text/javascript">
+       /*
+        ReactDOM.render(
+          element,
+          container,
+          [callback]
+        )
+
+       
+      //报错 props undefined  一般搭配高阶组件
+      let Grid = (props) => (
+        <div>
+            {this.props.children}
+        </div>
+      )
+
+      Grid,Grid1分别用ES5和ES6的方式来创建组件
+
+      HOC是高阶组件，可以在传入的组件包裹一个子元素，然后被赋值给this.props.children
+      HOC1是高阶组件，注意与HOC组件写法的区别和使用时候的区别。
+        可以通过给组件传children属性，然后渲染不同子元素
+      */
+    </script>
+  </body>
+</html>
