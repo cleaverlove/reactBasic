@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>react的开发思想</title>
+	<meta charset="utf-8">
+	<script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="../build/antd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/antd.css">
+    <link rel="stylesheet" type="text/css" href="./index.css">
+</head>
+<body>
+	<div class="counter">
+		
+	</div>
+	<script type="text/babel">
+		//*****第四弹*****
+		/*
+			数据驱动视图，通过数据来渲染新视图，消除手动操作DOM
+		*/
+		class Countfnc {
+			constructor() {
+				this.state = {count: 0};
+				this.createDOMFromString = this.createDOMFromString.bind(this)
+			}
+			
+			createDOMFromString(domString) {
+			  const div = document.createElement('div')
+			  div.innerHTML = domString
+			  return div
+			}
+
+			//增加setState方法 状态改变，重新插入新DOM
+			setState(newState) {
+				this.state = newState;
+				let oldDOM = this.wrap;
+				let newDOM =this.render(); //删除旧的，渲染新DOM
+				if (this.onStateChange) { //通过onStateChage通知外部
+					this.onStateChange(oldDOM,newDOM);
+				}
+			}
+			clickHandle(count) {
+				this.setState({count: count});
+			}			
+
+			render() {
+				this.de = this.createDOMFromString(`
+								<button id="decrement">-</button>
+							`)
+				this.in = this.createDOMFromString(`
+								<button id="increment">+</button>
+							`)
+				this.ipt = this.createDOMFromString(`
+								<input type="text" name="count" value=${this.state.count}>
+							`)
+				this.wrap = this.createDOMFromString(`
+								<div></div>
+							`)
+				this.de.addEventListener('click',() => { 
+					/*this.ipt.getElementsByTagName('input')[0].value= --this.state.count*/
+					this.clickHandle(--this.state.count); 
+				},false)
+				this.in.addEventListener('click',() => { 
+					/*this.ipt.getElementsByTagName('input')[0].value= ++this.state.count */
+					this.clickHandle(++this.state.count); 
+				},false)
+				this.wrap.append(this.de);
+				this.wrap.append(this.ipt);
+				this.wrap.append(this.in);
+				return this.wrap;
+			}
+
+			
+		}
+
+		var countFnc = new Countfnc();
+		var wrap = countFnc.render();
+		console.log(wrap);
+		var container = document.querySelector('.counter'); 
+		container.append(wrap); //第一次插入DOM
+		countFnc.onStateChange = (oldDOM,newDOM) => {
+			container.insertBefore(newDOM,oldDOM); //插入新DOM元素
+			container.removeChild(oldDOM); //删除旧DOM
+		}
+		
+
+	</script>
+</body>
+</html>

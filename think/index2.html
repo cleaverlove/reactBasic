@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>react的开发思想</title>
+	<meta charset="utf-8">
+	<script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="../build/antd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/antd.css">
+    <link rel="stylesheet" type="text/css" href="./index.css">
+    <style type="text/css">
+    	
+    </style>
+</head>
+<body>
+	<div class="counter">
+		
+	</div>
+	<script type="text/babel">
+		//*****第三弹*****
+		/*
+			事件的绑定等操作也进行封装。
+			我们再进行改进，产生一个新的类	
+		*/
+		class Countfnc {
+			constructor() {
+				this.state = {count: 0};
+				this.createDOMFromString = this.createDOMFromString.bind(this)
+			}
+			
+			createDOMFromString(domString) {
+			  const div = document.createElement('div')
+			  div.innerHTML = domString
+			  return div
+			}
+
+			render() {
+				this.de = this.createDOMFromString(`
+								<button id="decrement">-</button>
+							`)
+				this.in = this.createDOMFromString(`
+								<button id="increment">-</button>
+							`)
+				this.ipt = this.createDOMFromString(`
+								<input type="text" name="count" value="0">
+							`)
+				this.wrap = this.createDOMFromString(`
+								<div></div>
+							`)
+				this.de.addEventListener('click',() => { 
+					this.ipt.getElementsByTagName('input')[0].value= --this.state.count 
+				},false)
+				this.in.addEventListener('click',() => { 
+					this.ipt.getElementsByTagName('input')[0].value= ++this.state.count 
+				},false)
+				this.wrap.append(this.de);
+				this.wrap.append(this.ipt);
+				this.wrap.append(this.in);
+				return this.wrap;
+			}
+
+			
+		}
+
+		var wrap = new Countfnc().render();
+		console.log(wrap);
+		var container = document.querySelector('.counter');
+		container.append(wrap);
+	</script>
+</body>
+</html>

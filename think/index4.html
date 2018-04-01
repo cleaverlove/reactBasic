@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>react的开发思想</title>
+	<meta charset="utf-8">
+	<script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="../build/antd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/antd.css">
+    <link rel="stylesheet" type="text/css" href="./index.css">
+</head>
+<body>
+	<div class="counter">
+		
+	</div>
+	<script type="text/babel">
+		//*****第五弹*****
+		/*
+			没有办法直接在上面绑定函数(测试使用)
+		*/
+		class Countfnc {
+			constructor() {
+				this.state = {count: 0};
+				this.createDOMFromString = this.createDOMFromString.bind(this)
+			}
+			
+			createDOMFromString(domString) {
+			  const div = document.createElement('div')
+			  div.innerHTML = domString
+			  return div
+			}
+
+			//增加setState方法 状态改变，重新插入新DOM
+			setState(newState) {
+				this.state = newState;
+				let oldDOM = this.wrap;
+				let newDOM =this.render(); //删除旧的，渲染新DOM
+				if (this.onStateChange) { //通过onStateChage通知外部
+					this.onStateChange(oldDOM,newDOM);
+				}
+			}
+			clickHandle(count) {
+				this.setState({count: count});
+			}			
+
+			decrement() {
+				this.clickHandle(--this.state.count); 
+			}
+			increment() {
+				this.clickHandle(++this.state.count); 
+			}
+			render() {
+				this.el = this.createDOMFromString(`
+					<div class="counter">
+						<button id="decrement" onclick=${ this.decrement.bind(this) }>-</button>
+						<input type="text" name="count" value=${this.state.count}>
+						<button id="increment" onclick=${ this.increment.bind(this) }>+</button>
+					</div>
+				`)
+				return this.el;
+			}
+
+			
+		}
+
+		var countFnc = new Countfnc();
+		var wrap = countFnc.render();
+		console.log(wrap);
+		var container = document.querySelector('.counter'); 
+		container.append(wrap); //第一次插入DOM
+		countFnc.onStateChange = (oldDOM,newDOM) => {
+			container.insertBefore(newDOM,oldDOM); //插入新DOM元素
+			container.removeChild(oldDOM); //删除旧DOM
+		}
+	</script>
+</body>
+</html>

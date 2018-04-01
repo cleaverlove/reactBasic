@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>react的开发思想</title>
+	<meta charset="utf-8">
+	<script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="../build/antd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/antd.css">
+    <link rel="stylesheet" type="text/css" href="./index.css">
+    
+</head>
+<body>
+	<!-- <div class="counter">
+		<button id="decrement">-</button>
+		<input type="text" name="count">
+		<button id="increment">+</button>
+	</div> -->
+	<script type="text/javascript">
+		
+		//*****第一弹*****
+		/*
+		var ipt = document.getElementsByTagName('input')[0];
+		var count = 0;
+		ipt.value = count;
+		var add = document.getElementById('increment');
+		var reduce = document.getElementById('decrement');
+		add.onclick = function() {
+			count++
+			ipt.value = count;
+		}
+		reduce.onclick = function() {
+			count--;
+			ipt.value = count;
+		}
+
+		*/
+	</script>
+
+	
+	<script type="text/babel">
+
+		//*****第二弹*****
+		/*
+			别人要使用这个功能的时候，HTML和JS都要复制过去
+			优化: 结构复用，我们用一个类来实现产生该字符串
+		*/
+
+		/*
+			注意: 经常的坑在return上, 如果不用括号,应该是直接在return
+			后面跟上`
+		*/	
+		class Count {
+			render() {
+				return ( 
+					`<div class="counter">
+						<button id="decrement">-</button>
+						<input type="text" name="count">
+						<button id="increment">+</button>
+					</div>`
+					)
+			}
+		}
+		var count = new Count();
+		var countHtml = count.render();
+		document.body.innerHTML = countHtml;
+		var ipt = document.querySelector('input');
+		var count = 0;
+		ipt.value = count;
+		var add = document.querySelector('#increment');
+		var reduce = document.querySelector('#decrement');
+		add.addEventListener('click',function () {
+			count++;
+			ipt.value = count;
+		},false)
+		reduce.addEventListener('click',function() {
+			count--;
+			ipt.value = count;
+		},false) 
+	</script>
+
+	
+</body>
+</html>

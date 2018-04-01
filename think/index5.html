@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>react的开发思想</title>
+	<meta charset="utf-8">
+	<script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+    <script src="../build/antd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/antd.css">
+    <link rel="stylesheet" type="text/css" href="./index.css">
+</head>
+<body>
+	<div class="counter">
+		
+	</div>
+	<script type="text/babel">
+		//*****第六弹*****
+		/*
+			通过继承，让所有的组件都有自动更新数据的能力，抽象出一个类
+			重新渲染，然后传给外部的onStateChange，也可以这么写
+			var newDOM = this._renderDOM();
+			if (this.onStateChange) {
+				this.onStateChange(oldDOM,newDOM);
+			}
+		*/
+		var createDOMFromString = (domString) => {
+			  const div = document.createElement('div')
+			  div.innerHTML = domString
+			  return div
+		}
+		class Component {
+			constructor() {
+
+			}
+			setState(newState) {
+				this.state = newState;
+				if (this.render) { //render存在
+					var oldDOM = this.el;
+					this._renderDOM();
+					if (this.onStateChange) {
+						this.onStateChange(oldDOM,this.el);
+					}
+				}
+				
+			}
+			_renderDOM() {
+				this.el = createDOMFromString(this.render());
+				var addBtn = this.el.querySelector('#increment');
+				if (this.incrementHandle) { //子组件如果写了incrementHandle方法
+					addBtn.addEventListener('click',()=> this.incrementHandle(this),false)
+				}
+				var reduceBtn = this.el.querySelector('#decrement');
+				if (this.decrementHandle) { //子组件如果写了decrementHandle方法
+					reduceBtn.addEventListener('click',this.decrementHandle.bind(this),false)
+				}
+				return this.el;
+			}
+		}
+
+		class Countfnc extends Component {
+			constructor() {
+				super()
+				this.state = { count: 0 }
+			}
+			incrementHandle() {
+				this.setState({count: ++this.state.count});
+			}
+			decrementHandle() {
+				this.setState({count: --this.state.count});
+			}
+			render() {
+				return (`
+					<div class="counter">
+						<button id="decrement">-</button>
+						<input type="text" name="count" value=${this.state.count}>
+						<button id="increment">+</button>
+					</div>`
+					)
+			}
+		}
+
+		//定义一个渲染到DOM上的函数 dom是生成的DOM，el是要挂载的父DOM元素
+		var renderToDOM = (component,wrapper) => { 
+			wrapper.append(component._renderDOM());
+			component.onStateChange = (oldDOM,newDOM) => {
+				wrapper.insertBefore(newDOM,oldDOM);
+				wrapper.removeChild(oldDOM);
+			}
+
+		}
+		var countFnc = new Countfnc();
+		var container = document.querySelector('.counter');
+		console.log(container);
+		renderToDOM(countFnc,container);
+	</script>
+</body>
+</html>
+
