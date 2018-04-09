@@ -11,5 +11,8 @@
 ## 组件化思想
 - thinking文件夹
 
+## react的模式
+- Simple_React_Pattern文件夹
+
 
 
